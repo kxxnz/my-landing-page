@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Mail, Linkedin, Send, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useTextType } from '@/hooks/use-text-type';
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,20 @@ const ContactSection = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const { createTextTypeAnimation } = useTextType({ delay: 0.5, duration: 1.5 });
+
+  // Animate section title and subtitle
+  createTextTypeAnimation(
+    [titleRef, subtitleRef],
+    [
+      "Vamos Conversar?",
+      "Entre em contato para oportunidades, projetos ou apenas para trocar uma ideia sobre tecnologia"
+    ],
+    0.5
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,11 +58,9 @@ const ContactSection = () => {
     <section id="contato" className="section-padding">
       <div className="container-max">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
-            Vamos Conversar?
+          <h2 ref={titleRef} className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Entre em contato para oportunidades, projetos ou apenas para trocar uma ideia sobre tecnologia
+          <p ref={subtitleRef} className="text-muted-foreground max-w-2xl mx-auto">
           </p>
         </div>
 
@@ -65,10 +78,10 @@ const ContactSection = () => {
                   <div>
                     <p className="font-medium">Email</p>
                     <a 
-                      href="mailto:jp.reis2007@gmail.com" 
+                      href="mailto:joaopedrocavalheirodosreis@gmail.com" 
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
-                      jp.reis2007@gmail.com
+                      joaopedrocavalheirodosreis@gmail.com
                     </a>
                   </div>
                 </div>
@@ -96,7 +109,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="font-medium">Localização</p>
-                    <p className="text-muted-foreground">São Paulo, Brasil</p>
+                    <p className="text-muted-foreground">Medianeira, Paraná, Brasil</p>
                   </div>
                 </div>
               </div>

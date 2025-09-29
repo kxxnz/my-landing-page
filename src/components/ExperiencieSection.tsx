@@ -1,8 +1,25 @@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, Calendar, ArrowRight } from 'lucide-react';
+import { useRef } from 'react';
+import { useTextType } from '@/hooks/use-text-type';
+import CardSwap, { Card as SwapCard } from '@/components/CardSwap';
 
 const ExperienceSection = () => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const { createTextTypeAnimation } = useTextType({ delay: 0.5, duration: 1.5 });
+
+  // Animate section title and subtitle
+  createTextTypeAnimation(
+    [titleRef, subtitleRef],
+    [
+      "Experiência Profissional",
+      "Minha trajetória profissional e principais projetos desenvolvidos"
+    ],
+    0.5
+  );
+
   const experiences = [
     {
       id: 1,
@@ -33,64 +50,56 @@ const ExperienceSection = () => {
     <section id="experiencia" className="section-padding">
       <div className="container-max">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
-            Experiência Profissional
+          <h2 ref={titleRef} className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Minha trajetória profissional e principais projetos desenvolvidos
+          <p ref={subtitleRef} className="text-muted-foreground max-w-2xl mx-auto">
           </p>
         </div>
 
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary to-secondary transform md:-translate-x-0.5"></div>
+        {/* CardSwap centered */}
+        <div className="flex justify-center">
+          <div style={{ height: '600px', position: 'relative', width: '100%', maxWidth: '800px' }}>
+            <CardSwap
+              cardDistance={80}
+              verticalDistance={90}
+              delay={4000}
+              pauseOnHover={true}
+              width={500}
+              height={400}
+              easing="smooth"
+            >
+              {experiences.map((exp, index) => (
+                <SwapCard key={exp.id} className="p-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <Badge variant={exp.status === 'current' ? 'default' : 'secondary'}>
+                      {exp.status === 'current' ? 'Atual' : 'Concluído'}
+                    </Badge>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Calendar className="h-4 w-4 mr-1" />
+                      {exp.period}
+                    </div>
+                  </div>
 
-          <div className="space-y-12">
-            {experiences.map((exp, index) => (
-              <div
-                key={exp.id}
-                className={`relative flex items-center ${
-                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                } animate-slide-in`}
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                {/* Timeline dot */}
-                <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background transform md:-translate-x-1/2 z-10"></div>
+                  <div className="flex items-center mb-4">
+                    <Briefcase className="h-6 w-6 text-primary mr-3" />
+                    <h3 className="text-2xl font-semibold">{exp.title}</h3>
+                  </div>
 
-                {/* Content */}
-                <div className={`ml-12 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
-                  <Card className="p-6 bg-card/80 backdrop-blur-sm border border-border/50 shadow-[var(--shadow-card)] card-hover">
-                    <div className="flex items-center justify-between mb-3">
-                      <Badge variant={exp.status === 'current' ? 'default' : 'secondary'} className="mb-2">
-                        {exp.status === 'current' ? 'Atual' : 'Concluído'}
-                      </Badge>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        {exp.period}
+                  <p className="text-xl font-medium text-secondary mb-3">{exp.company}</p>
+                  <p className="text-base text-muted-foreground mb-6">{exp.description}</p>
+
+                  <div className="space-y-3">
+                    <h4 className="font-medium text-lg text-foreground mb-3">Principais Projetos:</h4>
+                    {exp.projects.map((project, i) => (
+                      <div key={i} className="flex items-start">
+                        <ArrowRight className="h-4 w-4 text-primary mr-3 mt-1 flex-shrink-0" />
+                        <p className="text-sm text-muted-foreground">{project}</p>
                       </div>
-                    </div>
-
-                    <div className="flex items-center mb-3">
-                      <Briefcase className="h-5 w-5 text-primary mr-2" />
-                      <h3 className="text-xl font-semibold">{exp.title}</h3>
-                    </div>
-
-                    <p className="text-lg font-medium text-secondary mb-2">{exp.company}</p>
-                    <p className="text-muted-foreground mb-4">{exp.description}</p>
-
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-foreground mb-2">Principais Projetos:</h4>
-                      {exp.projects.map((project, i) => (
-                        <div key={i} className="flex items-start">
-                          <ArrowRight className="h-4 w-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
-                          <p className="text-sm text-muted-foreground">{project}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </Card>
-                </div>
-              </div>
-            ))}
+                    ))}
+                  </div>
+                </SwapCard>
+              ))}
+            </CardSwap>
           </div>
         </div>
       </div>

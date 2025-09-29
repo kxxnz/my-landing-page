@@ -12,8 +12,24 @@ import {
   FileSpreadsheet,
   Activity
 } from 'lucide-react';
+import { useRef } from 'react';
+import { useTextType } from '@/hooks/use-text-type';
 
 const SkillsSection = () => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const { createTextTypeAnimation } = useTextType({ delay: 0.5, duration: 1.5 });
+
+  // Animate section title and subtitle
+  createTextTypeAnimation(
+    [titleRef, subtitleRef],
+    [
+      "Competências & Skills",
+      "Tecnologias, certificações e idiomas que domino"
+    ],
+    0.5
+  );
+
   const skills = [
     { name: 'Power Apps', icon: Code, level: 'Avançado', color: 'primary' },
     { name: 'Power Automate', icon: Zap, level: 'Avançado', color: 'primary' },
@@ -38,11 +54,9 @@ const SkillsSection = () => {
     <section id="competencias" className="section-padding bg-muted/30">
       <div className="container-max">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
-            Competências & Skills
+          <h2 ref={titleRef} className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Tecnologias, certificações e idiomas que domino
+          <p ref={subtitleRef} className="text-muted-foreground max-w-2xl mx-auto">
           </p>
         </div>
 

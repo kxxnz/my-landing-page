@@ -1,16 +1,40 @@
 import { Card } from '@/components/ui/card';
 import { User, GraduationCap, Target } from 'lucide-react';
+import { useRef } from 'react';
+import { useTextType } from '@/hooks/use-text-type';
 
 const AboutSection = () => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const profileRef = useRef<HTMLParagraphElement>(null);
+  const { createTextTypeAnimation } = useTextType({ delay: 0.5, duration: 2 });
+
+  // Animate section title and subtitle
+  createTextTypeAnimation(
+    [titleRef, subtitleRef],
+    [
+      "Sobre Mim",
+      "Conheça mais sobre minha jornada acadêmica e profissional"
+    ],
+    0.5
+  );
+
+  // Animate profile description
+  createTextTypeAnimation(
+    [profileRef],
+    [
+      "Estudante de Ciência da Computação, atuando como Estagiário na Sicredi Vanguarda SP/PR/RJ na área de Experiência do Associado. Com interesse especial em dados, Power Apps, Power BI e Cibersegurança, busco constantemente evoluir tecnicamente e contribuir para projetos inovadores que impactem positivamente a experiência dos usuários."
+    ],
+    1.5
+  );
+
   return (
     <section id="sobre" className="section-padding bg-muted/30">
       <div className="container-max">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
-            Sobre Mim
+          <h2 ref={titleRef} className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Conheça mais sobre minha jornada acadêmica e profissional
+          <p ref={subtitleRef} className="text-muted-foreground max-w-2xl mx-auto">
           </p>
         </div>
 
@@ -21,11 +45,7 @@ const AboutSection = () => {
                 <User className="h-8 w-8 text-primary mr-3" />
                 <h3 className="text-2xl font-semibold">Perfil Profissional</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed text-lg">
-                Estudante de Ciência da Computação, atuando como Estagiário na Sicredi Vanguarda SP/PR/RJ 
-                na área de Experiência do Associado. Com interesse especial em dados, Power Apps, Power BI 
-                e Cibersegurança, busco constantemente evoluir tecnicamente e contribuir para projetos 
-                inovadores que impactem positivamente a experiência dos usuários.
+              <p ref={profileRef} className="text-muted-foreground leading-relaxed text-lg">
               </p>
             </Card>
           </div>
