@@ -1,73 +1,174 @@
-# Welcome to your Lovable project
+# 🚀 Landing Page Pessoal - João Pedro Cavalheiro dos Reis
 
-## Project info
+Uma landing page moderna e responsiva desenvolvida com React, TypeScript e Tailwind CSS, criada para destacar minhas habilidades e experiência profissional.
 
-**URL**: https://lovable.dev/projects/6a915ee1-1f4f-4004-a11f-90ad8a3a433e
+## ✨ Sobre o Projeto
 
-## How can I edit this code?
+Esta é minha landing page pessoal onde apresento:
+- **Perfil profissional** com foto e informações de contato
+- **Seção sobre mim** com detalhes pessoais e objetivos
+- **Experiência profissional** e projetos relevantes
+- **Habilidades técnicas** em Power Apps, Power Automate, Dados e BI
+- **Formulário de contato** para networking
 
-There are several ways of editing your application.
+## 🛠️ Tecnologias Utilizadas
 
-**Use Lovable**
+- **React 18** - Biblioteca para interfaces de usuário
+- **TypeScript** - Superset do JavaScript com tipagem estática
+- **Vite** - Build tool moderno e rápido
+- **Tailwind CSS** - Framework CSS utilitário
+- **Radix UI** - Componentes acessíveis e customizáveis
+- **Lucide React** - Ícones modernos e consistentes
+- **Framer Motion** - Animações suaves (via Tailwind)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6a915ee1-1f4f-4004-a11f-90ad8a3a433e) and start prompting.
+## 🎨 Características
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Design Responsivo** - Funciona perfeitamente em desktop, tablet e mobile
+- **Animações Suaves** - Transições e efeitos visuais elegantes
+- **Componentes Reutilizáveis** - Arquitetura modular e escalável
+- **Acessibilidade** - Seguindo as melhores práticas de acessibilidade
+- **Performance Otimizada** - Carregamento rápido e eficiente
 
-**Use your preferred IDE**
+## 🚀 Como Executar o Projeto
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Pré-requisitos
+- Node.js (versão 18 ou superior)
+- npm ou yarn
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Instalação
 
-Follow these steps:
+1. **Clone o repositório:**
+```bash
+git clone https://github.com/kxxnz/my-landing-page.git
+cd my-landing-page
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. **Instale as dependências:**
+```bash
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. **Execute o projeto em modo de desenvolvimento:**
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+4. **Acesse no navegador:**
+```
+http://localhost:8080
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Scripts Disponíveis
 
-**Use GitHub Codespaces**
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Compila o projeto para produção
+- `npm run preview` - Visualiza o build de produção
+- `npm run lint` - Executa o linter para verificar o código
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📁 Estrutura do Projeto
 
-## What technologies are used for this project?
+```
+src/
+├── components/          # Componentes React
+│   ├── ui/             # Componentes de interface reutilizáveis
+│   ├── Header.tsx      # Cabeçalho da página
+│   ├── HeroSection.tsx # Seção principal com apresentação
+│   ├── AboutSection.tsx # Seção sobre mim
+│   ├── ExperiencieSection.tsx # Experiência profissional
+│   ├── SkillSection.tsx # Habilidades técnicas
+│   ├── ContactSection.tsx # Formulário de contato
+│   └── Footer.tsx      # Rodapé
+├── pages/              # Páginas da aplicação
+├── hooks/              # Hooks customizados
+├── lib/                # Utilitários e configurações
+├── assets/             # Imagens e recursos estáticos
+└── types/              # Definições de tipos TypeScript
+```
 
-This project is built with:
+## 🎯 Seções da Landing Page
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### 🏠 **Hero Section**
+- Apresentação principal com foto de perfil
+- Título e descrição profissional
+- Botões de ação (Download CV, LinkedIn, Contato)
 
-## How can I deploy this project?
+### 👨‍💻 **Sobre Mim**
+- Informações pessoais e profissionais
+- Objetivos e motivações
+- Cards com informações relevantes
 
-Simply open [Lovable](https://lovable.dev/projects/6a915ee1-1f4f-4004-a11f-90ad8a3a433e) and click on Share -> Publish.
+### 💼 **Experiência**
+- Histórico profissional
+- Projetos desenvolvidos
+- Tecnologias utilizadas em cada projeto
 
-## Can I connect a custom domain to my Lovable project?
+### 🛠️ **Habilidades**
+- Skills técnicas organizadas por categoria
+- Nível de proficiência
+- Tecnologias e ferramentas
 
-Yes, you can!
+### 📞 **Contato**
+- Formulário de contato funcional
+- Informações de contato direto
+- Links para redes sociais
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🎨 Customização
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### Cores e Tema
+As cores podem ser personalizadas no arquivo `tailwind.config.ts`:
+
+```typescript
+theme: {
+  extend: {
+    colors: {
+      primary: "hsl(var(--primary))",
+      secondary: "hsl(var(--secondary))",
+      // ... outras cores
+    }
+  }
+}
+```
+
+### Conteúdo
+- Edite os componentes em `src/components/` para alterar o conteúdo
+- Substitua a imagem de perfil em `src/assets/`
+- Modifique as informações de contato e redes sociais
+
+## 📱 Responsividade
+
+A landing page foi desenvolvida com mobile-first approach:
+- **Mobile**: < 768px
+- **Tablet**: 768px - 1024px  
+- **Desktop**: > 1024px
+
+## 🚀 Deploy
+
+### Vercel (Recomendado)
+1. Conecte seu repositório GitHub à Vercel
+2. Configure o build command: `npm run build`
+3. Configure o output directory: `dist`
+4. Deploy automático a cada push
+
+### Netlify
+1. Conecte o repositório
+2. Build command: `npm run build`
+3. Publish directory: `dist`
+
+### GitHub Pages
+1. Execute `npm run build`
+2. Faça push da pasta `dist` para a branch `gh-pages`
+
+## 📄 Licença
+
+Este projeto é de uso pessoal. Todos os direitos reservados.
+
+## 🤝 Contato
+
+**João Pedro Cavalheiro dos Reis**
+- 📧 Email: [joaopedrocavalheirodosreis@gmail.com]
+- 💼 LinkedIn: [linkedin.com/in/joão-pedro-reis]
+- 🐙 GitHub: [github.com/kxxnz]
+
+---
+
+⭐ Se gostou do projeto, deixe uma estrela no repositório!
