@@ -284,7 +284,7 @@ export default function LiquidEther({
     container.style.position = container.style.position || 'relative';
     container.style.overflow = container.style.overflow || 'hidden';
 
-    // Enhanced WebGL setup with better liquid effect
+    // LiquidEther WebGL setup with mouse interaction
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x000000, 0);
@@ -293,15 +293,16 @@ export default function LiquidEther({
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    // Create multiple animated planes for layered effect
     const geometry = new THREE.PlaneGeometry(2, 2);
     
-    // Main liquid effect
-    const mainMaterial = new THREE.ShaderMaterial({
+    // Liquid effect material with mouse interaction
+    const material = new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
         resolution: { value: new THREE.Vector2(container.clientWidth, container.clientHeight) },
         mouse: { value: new THREE.Vector2(0, 0) },
+        mouseForce: { value: mouseForce },
+        cursorSize: { value: cursorSize },
         color1: { value: new THREE.Color(colors[0]) },
         color2: { value: new THREE.Color(colors[1]) },
         color3: { value: new THREE.Color(colors[2]) }
@@ -317,6 +318,8 @@ export default function LiquidEther({
         uniform float time;
         uniform vec2 resolution;
         uniform vec2 mouse;
+        uniform float mouseForce;
+        uniform float cursorSize;
         uniform vec3 color1;
         uniform vec3 color2;
         uniform vec3 color3;
@@ -360,14 +363,14 @@ export default function LiquidEther({
           vec2 uv = vUv;
           vec2 center = vec2(0.5);
           
-          // Mouse influence
-          vec2 mouseInfluence = (mouse - center) * 0.3;
-          
-          // Create flowing liquid effect
-          vec2 flow = vec2(
-            fbm(uv * 2.0 + time * 0.5 + mouseInfluence),
-            fbm(uv * 2.0 + time * 0.3 + mouseInfluence + vec2(100.0))
-          );
+        // Mouse influence with force - more responsive
+        vec2 mouseInfluence = (mouse - center) * mouseForce * 0.1;
+
+        // Create flowing liquid effect with stronger mouse influence
+        vec2 flow = vec2(
+          fbm(uv * 2.0 + time * 0.5 + mouseInfluence * 2.0),
+          fbm(uv * 2.0 + time * 0.3 + mouseInfluence * 2.0 + vec2(100.0))
+        );
           
           // Create multiple layers
           float layer1 = fbm(uv * 3.0 + flow * 0.5 + time * 0.8);
@@ -378,9 +381,14 @@ export default function LiquidEther({
           float intensity = layer1 * 0.5 + layer2 * 0.3 + layer3 * 0.2;
           intensity = smoothstep(0.3, 0.8, intensity);
           
-          // Distance from center for radial effect
-          float dist = distance(uv, center + mouseInfluence * 0.5);
-          intensity *= (1.0 - smoothstep(0.0, 0.8, dist));
+        // Distance from mouse for cursor effect - more visible
+        float dist = distance(uv, mouse);
+        float cursorEffect = 1.0 - smoothstep(0.0, cursorSize * 0.02, dist);
+        intensity += cursorEffect * 0.8;
+          
+        // Distance from center for radial effect - more responsive to mouse
+        float centerDist = distance(uv, center + mouseInfluence * 1.5);
+        intensity *= (1.0 - smoothstep(0.0, 0.6, centerDist));
           
           // Color mixing
           vec3 finalColor = mix(color1, color2, intensity);
@@ -390,28 +398,28 @@ export default function LiquidEther({
           float glow = intensity * intensity;
           finalColor += glow * 0.3;
           
-          gl_FragColor = vec4(finalColor, intensity * 0.4);
+          gl_FragColor = vec4(finalColor, intensity * 0.6);
         }
       `,
       transparent: true
     });
 
-    const mainMesh = new THREE.Mesh(geometry, mainMaterial);
-    scene.add(mainMesh);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
 
-    // Add mouse tracking
+    // Mouse tracking
     const handleMouseMove = (event: MouseEvent) => {
       const rect = container.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width;
       const y = (event.clientY - rect.top) / rect.height;
-      mainMaterial.uniforms.mouse.value.set(x, y);
+      material.uniforms.mouse.value.set(x, y);
     };
 
     container.addEventListener('mousemove', handleMouseMove);
 
     const animate = () => {
       requestAnimationFrame(animate);
-      mainMaterial.uniforms.time.value += 0.01;
+      material.uniforms.time.value += 0.01;
       renderer.render(scene, camera);
     };
     animate();
@@ -419,8 +427,6 @@ export default function LiquidEther({
     const handleResize = () => {
       const width = container.clientWidth;
       const height = container.clientHeight;
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
       renderer.setSize(width, height);
       material.uniforms.resolution.value.set(width, height);
     };
