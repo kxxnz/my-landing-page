@@ -59,7 +59,7 @@ const HeroSection = () => {
               location="Brasil"
               experience="Power Apps | Power Automate | Dados e BI"
               githubUrl="https://github.com/kxxnz"
-              email="joao.pedro@email.com"
+              email="joaopedrocavalheirodosreis@email.com"
             />
           </div>
         </div>
