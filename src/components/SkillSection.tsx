@@ -51,7 +51,7 @@ const SkillsSection = () => {
   ];
 
   return (
-    <section id="competencias" className="section-padding bg-muted/30">
+    <section id="competencias" className="section-padding">
       <div className="container-max">
         <div className="text-center mb-16 animate-fade-in">
           <h2 ref={titleRef} className="text-3xl md:text-4xl font-bold mb-4 gradient-text">

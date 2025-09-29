@@ -284,22 +284,27 @@ export default function LiquidEther({
     container.style.position = container.style.position || 'relative';
     container.style.overflow = container.style.overflow || 'hidden';
 
-    // Simplified WebGL setup for now
+    // Enhanced WebGL setup with better liquid effect
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    // Create a simple animated background
+    // Create multiple animated planes for layered effect
     const geometry = new THREE.PlaneGeometry(2, 2);
-    const material = new THREE.ShaderMaterial({
+    
+    // Main liquid effect
+    const mainMaterial = new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
         resolution: { value: new THREE.Vector2(container.clientWidth, container.clientHeight) },
-        colors: { value: colors.map(c => new THREE.Color(c)) }
+        mouse: { value: new THREE.Vector2(0, 0) },
+        color1: { value: new THREE.Color(colors[0]) },
+        color2: { value: new THREE.Color(colors[1]) },
+        color3: { value: new THREE.Color(colors[2]) }
       },
       vertexShader: `
         varying vec2 vUv;
@@ -311,40 +316,102 @@ export default function LiquidEther({
       fragmentShader: `
         uniform float time;
         uniform vec2 resolution;
-        uniform vec3 colors[3];
+        uniform vec2 mouse;
+        uniform vec3 color1;
+        uniform vec3 color2;
+        uniform vec3 color3;
         varying vec2 vUv;
+        
+        // Noise function
+        float noise(vec2 p) {
+          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+        }
+        
+        // Smooth noise
+        float smoothNoise(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          
+          float a = noise(i);
+          float b = noise(i + vec2(1.0, 0.0));
+          float c = noise(i + vec2(0.0, 1.0));
+          float d = noise(i + vec2(1.0, 1.0));
+          
+          return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+        }
+        
+        // Fractal noise
+        float fbm(vec2 p) {
+          float value = 0.0;
+          float amplitude = 0.5;
+          float frequency = 1.0;
+          
+          for(int i = 0; i < 4; i++) {
+            value += amplitude * smoothNoise(p * frequency);
+            amplitude *= 0.5;
+            frequency *= 2.0;
+          }
+          
+          return value;
+        }
         
         void main() {
           vec2 uv = vUv;
           vec2 center = vec2(0.5);
-          float dist = distance(uv, center);
           
-          float wave1 = sin(dist * 10.0 - time * 2.0) * 0.1;
-          float wave2 = sin(dist * 15.0 - time * 3.0) * 0.05;
-          float wave3 = sin(dist * 20.0 - time * 1.5) * 0.03;
+          // Mouse influence
+          vec2 mouseInfluence = (mouse - center) * 0.3;
           
-          float intensity = 1.0 - dist + wave1 + wave2 + wave3;
-          intensity = clamp(intensity, 0.0, 1.0);
+          // Create flowing liquid effect
+          vec2 flow = vec2(
+            fbm(uv * 2.0 + time * 0.5 + mouseInfluence),
+            fbm(uv * 2.0 + time * 0.3 + mouseInfluence + vec2(100.0))
+          );
           
-          vec3 color1 = colors[0];
-          vec3 color2 = colors[1];
-          vec3 color3 = colors[2];
+          // Create multiple layers
+          float layer1 = fbm(uv * 3.0 + flow * 0.5 + time * 0.8);
+          float layer2 = fbm(uv * 5.0 + flow * 0.3 + time * 1.2);
+          float layer3 = fbm(uv * 8.0 + flow * 0.2 + time * 1.5);
           
+          // Combine layers
+          float intensity = layer1 * 0.5 + layer2 * 0.3 + layer3 * 0.2;
+          intensity = smoothstep(0.3, 0.8, intensity);
+          
+          // Distance from center for radial effect
+          float dist = distance(uv, center + mouseInfluence * 0.5);
+          intensity *= (1.0 - smoothstep(0.0, 0.8, dist));
+          
+          // Color mixing
           vec3 finalColor = mix(color1, color2, intensity);
-          finalColor = mix(finalColor, color3, intensity * 0.5);
+          finalColor = mix(finalColor, color3, intensity * 0.6);
           
-          gl_FragColor = vec4(finalColor, intensity * 0.3);
+          // Add some glow
+          float glow = intensity * intensity;
+          finalColor += glow * 0.3;
+          
+          gl_FragColor = vec4(finalColor, intensity * 0.4);
         }
       `,
       transparent: true
     });
 
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    const mainMesh = new THREE.Mesh(geometry, mainMaterial);
+    scene.add(mainMesh);
+
+    // Add mouse tracking
+    const handleMouseMove = (event: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+      mainMaterial.uniforms.mouse.value.set(x, y);
+    };
+
+    container.addEventListener('mousemove', handleMouseMove);
 
     const animate = () => {
       requestAnimationFrame(animate);
-      material.uniforms.time.value += 0.01;
+      mainMaterial.uniforms.time.value += 0.01;
       renderer.render(scene, camera);
     };
     animate();
@@ -362,6 +429,7 @@ export default function LiquidEther({
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      container.removeEventListener('mousemove', handleMouseMove);
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }

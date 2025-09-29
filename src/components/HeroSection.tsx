@@ -37,15 +37,6 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center section-padding overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5"></div>
-      <div className="absolute inset-0 bg-[var(--gradient-parallax)] animate-parallax-bg"></div>
-      
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl animate-parallax-float"></div>
-      <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl animate-parallax-float" style={{animationDelay: '2s'}}></div>
-      <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-accent/10 rounded-full blur-2xl animate-parallax-float" style={{animationDelay: '4s'}}></div>
-      
       <div className="container-max relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 animate-fade-in">
           {/* Left side - Name and description */}

@@ -57,7 +57,7 @@ const ExperienceSection = () => {
         </div>
 
         {/* CardSwap centered */}
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center min-h-[600px]">
           <div style={{ height: '600px', position: 'relative', width: '100%', maxWidth: '800px' }}>
             <CardSwap
               cardDistance={80}
